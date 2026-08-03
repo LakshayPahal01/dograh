@@ -28,8 +28,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -42,8 +40,6 @@ services:
 
   redis:
     image: redis:7
-    ports:
-      - "6379:6379"
     command: >
       --requirepass ${REDIS_PASSWORD:-redissecret}
     volumes:
@@ -142,6 +138,8 @@ services:
 
   api:
     image: ${REGISTRY:-dograhai}/dograh-api:latest
+    volumes:
+      - ./api:/app/api
     environment:
       # Core application config
       ENVIRONMENT: "${ENVIRONMENT:-local}"
@@ -248,8 +246,12 @@ services:
       POSTHOG_API_KEY: "phc_ItizB1dP6yv7ZYobbcqrpxTdbomDA8hJFSEmAMdYvIr"
       POSTHOG_HOST: "https://us.i.posthog.com"
 
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY:-}"
+      DEEPGRAM_API_KEY: "${DEEPGRAM_API_KEY:-}"
+      CARTESIA_API_KEY: "${CARTESIA_API_KEY:-}"
+
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       postgres:
         condition: service_healthy

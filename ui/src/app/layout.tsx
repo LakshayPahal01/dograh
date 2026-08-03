@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { DM_Sans, Outfit } from "next/font/google";
 import { Suspense } from "react";
 
 import ChatwootWidget from "@/components/ChatwootWidget";
@@ -18,19 +18,19 @@ import { TelephonyConfigWarningsProvider } from "@/context/TelephonyConfigWarnin
 import { AuthProvider } from "@/lib/auth";
 
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Dograh",
-  description: "Open Source Voice Assistant Workflow Builder",
+  title: "Telephony Mantra Assist",
+  description: "Telephony Mantra Assist Voice Platform",
 };
 
 export default function RootLayout({
@@ -64,7 +64,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${dmSans.variable} ${outfit.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <SentryErrorBoundary>
             <AuthProvider>

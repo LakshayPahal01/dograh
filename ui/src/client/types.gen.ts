@@ -1757,7 +1757,7 @@ export type CurrentUsageResponse = {
      */
     period_end: string;
     /**
-     * Used Dograh Tokens
+     * Used Telephony Mantra Assist Tokens
      */
     used_dograh_tokens: number;
     /**
@@ -1831,7 +1831,7 @@ export type DailyUsageBreakdownResponse = {
      */
     total_cost_usd?: number | null;
     /**
-     * Total Dograh Tokens
+     * Total Telephony Mantra Assist Tokens
      */
     total_dograh_tokens: number;
     /**
@@ -1857,7 +1857,7 @@ export type DailyUsageItem = {
      */
     cost_usd?: number | null;
     /**
-     * Dograh Tokens
+     * Telephony Mantra Assist Tokens
      */
     dograh_tokens: number;
     /**
@@ -2158,7 +2158,7 @@ export type DocumentUploadResponseSchema = {
 };
 
 /**
- * Dograh
+ * Telephony Mantra Assist
  */
 export type DograhEmbeddingsConfiguration = {
     /**
@@ -2178,7 +2178,7 @@ export type DograhEmbeddingsConfiguration = {
 };
 
 /**
- * Dograh
+ * Telephony Mantra Assist
  */
 export type DograhLlmService = {
     /**
@@ -2220,7 +2220,7 @@ export type DograhManagedAiModelConfiguration = {
 };
 
 /**
- * Dograh
+ * Telephony Mantra Assist
  */
 export type DograhSttService = {
     /**
@@ -2234,7 +2234,7 @@ export type DograhSttService = {
     /**
      * Model
      *
-     * Dograh STT tier.
+     * Telephony Mantra Assist STT tier.
      */
     model?: string;
     /**
@@ -2246,7 +2246,7 @@ export type DograhSttService = {
 };
 
 /**
- * Dograh
+ * Telephony Mantra Assist
  */
 export type DograhTtsService = {
     /**
@@ -2260,7 +2260,7 @@ export type DograhTtsService = {
     /**
      * Model
      *
-     * Dograh TTS tier.
+     * Telephony Mantra Assist TTS tier.
      */
     model?: string;
     /**
@@ -2756,7 +2756,7 @@ export type GoogleTtsConfiguration = {
     /**
      * Model
      *
-     * Google Cloud low-latency TTS engine. Dograh maps this to Pipecat's streaming Google TTS service for Chirp 3 HD and Journey voices.
+     * Google Cloud low-latency TTS engine. Telephony Mantra Assist maps this to Pipecat's streaming Google TTS service for Chirp 3 HD and Journey voices.
      */
     model?: string;
     /**
@@ -3062,7 +3062,7 @@ export type HttpApiConfig = {
     /**
      * Preset Parameters
      *
-     * Parameters injected by Dograh from fixed values or workflow context templates.
+     * Parameters injected by Telephony Mantra Assist from fixed values or workflow context templates.
      */
     preset_parameters?: Array<PresetToolParameter> | null;
     /**
@@ -3156,7 +3156,7 @@ export type HttpTransferResolverConfig = {
     /**
      * Wait Message
      *
-     * Optional short message played while Dograh resolves routing.
+     * Optional short message played while Telephony Mantra Assist resolves routing.
      */
     wait_message?: string | null;
     /**
@@ -3168,7 +3168,7 @@ export type HttpTransferResolverConfig = {
     /**
      * Preset Parameters
      *
-     * Parameters injected by Dograh from fixed values or workflow context templates.
+     * Parameters injected by Telephony Mantra Assist from fixed values or workflow context templates.
      */
     preset_parameters?: Array<PresetToolParameter> | null;
 };
@@ -4549,7 +4549,7 @@ export type PlivoConfigurationResponse = {
 /**
  * PresetToolParameter
  *
- * A parameter injected by Dograh at runtime.
+ * A parameter injected by Telephony Mantra Assist at runtime.
  */
 export type PresetToolParameter = {
     /**
@@ -6631,7 +6631,7 @@ export type UsageHistoryResponse = {
      */
     runs: Array<WorkflowRunUsageResponse>;
     /**
-     * Total Dograh Tokens
+     * Total Telephony Mantra Assist Tokens
      */
     total_dograh_tokens: number;
     /**
@@ -7520,7 +7520,7 @@ export type WorkflowRunUsageResponse = {
      */
     created_at: string;
     /**
-     * Dograh Token Usage
+     * Telephony Mantra Assist Token Usage
      */
     dograh_token_usage: number;
     /**
