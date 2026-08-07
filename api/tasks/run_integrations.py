@@ -230,11 +230,19 @@ async def run_integrations_post_workflow_run(_ctx, workflow_run_id: int):
 
         # Step 4: Generate a public access token for any run that needs post-call work.
         has_campaign = workflow_run.campaign_id is not None
+        
+        # Trigger Mantra Assist webhook notifier if this is an MA call
+        initial_context = workflow_run.initial_context or {}
+        if initial_context.get("mantra_assist_call"):
+            from api.tasks.arq import enqueue_job
+            await enqueue_job(FunctionNames.MANTRA_WEBHOOK_NOTIFIER, workflow_run_id)
+
         if (
             not webhook_nodes
             and not qa_nodes
             and not has_registered_integrations
             and not has_campaign
+            and not initial_context.get("mantra_assist_call")
         ):
             logger.debug("No integration nodes and no campaign, skipping")
             return

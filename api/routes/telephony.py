@@ -66,6 +66,7 @@ class InitiateCallRequest(BaseModel):
     # Optional caller-ID phone number to dial out from. Must belong to the
     # resolved telephony configuration; otherwise the provider picks one.
     from_phone_number_id: int | None = None
+    extra_context: dict | None = None
 
 
 def _get_execution_user_id(workflow) -> int:
@@ -178,15 +179,19 @@ async def initiate_call(
         if not workflow_run_id:
             numeric_suffix = int(str(uuid.uuid4()).replace("-", "")[:8], 16) % 100000000
             workflow_run_name = f"WR-TEL-OUT-{numeric_suffix:08d}"
+            base_initial_context = {
+                "phone_number": phone_number,
+                "called_number": phone_number,
+                "provider": provider.PROVIDER_NAME,
+                "telephony_configuration_id": telephony_configuration_id,
+            }
+            if request.extra_context:
+                base_initial_context.update(request.extra_context)
+
             run_inputs = await prepare_workflow_run_inputs(
                 db_client,
                 workflow,
-                initial_context={
-                    "phone_number": phone_number,
-                    "called_number": phone_number,
-                    "provider": provider.PROVIDER_NAME,
-                    "telephony_configuration_id": telephony_configuration_id,
-                },
+                initial_context=base_initial_context,
                 use_draft=True,
                 include_template_context=True,
             )

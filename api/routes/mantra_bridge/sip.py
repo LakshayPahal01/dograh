@@ -1,18 +1,13 @@
-from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from typing import Optional
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from loguru import logger
 import uuid
 
 from api.db import db_client
-from api.services.storage import storage_fs
-from api.tasks.arq import enqueue_job
-from api.tasks.function_names import FunctionNames
 
 router = APIRouter(prefix="/sip", tags=["mantra-bridge-sip"])
-router_kb = APIRouter(prefix="/kb", tags=["mantra-bridge-kb"])
 
-# --- SIP Endpoints ---
 class SetupInboundRequest(BaseModel):
     number: str
     org_id: int
@@ -81,11 +76,6 @@ class CreateSipTrunkResponse(BaseModel):
 async def create_outbound_trunk(providerSlug: str, request: CreateSipTrunkPayload):
     logger.info(f"[Mantra Bridge] Outbound setup requested for {request.numbers}")
     
-    # Extract org_id from somewhere? MantraAssist doesn't send it for outbound! 
-    # But MantraAssist might rely on the DB id returned. Let's just create a generic config or look up a default org.
-    # Actually, we can just return a fake success if Dograh handles routing natively.
-    # We'll just return a placeholder ID, since MantraAssist stores it.
-    
     return CreateSipTrunkResponse(
         status="success",
         sip_trunk_id=f"outbound_{providerSlug}_{uuid.uuid4().hex[:8]}"
@@ -98,65 +88,3 @@ async def delete_outbound_trunk(sip_trunk_id: str):
 @router.delete("/trunks/inbound/{sip_trunk_id}")
 async def delete_inbound_trunk(sip_trunk_id: str):
     return {"status": "success"}
-
-# --- KB Endpoints ---
-class KBIngestResponse(BaseModel):
-    status_code: int
-    status: str
-    message: str
-    document_id: str
-    org_id: str
-    s3_url: Optional[str] = None
-
-@router_kb.post("/ingest", response_model=KBIngestResponse)
-async def ingest_kb(
-    org_id: str = Form(...),
-    document_id: str = Form(...),
-    file: Optional[UploadFile] = File(None),
-    text: Optional[str] = Form(None),
-    tags_name: Optional[str] = Form(None),
-    category_name: Optional[str] = Form(None),
-    process_stage_data: Optional[str] = Form(None),
-):
-    logger.info(f"[Mantra Bridge] KB Ingest requested for doc {document_id}, org {org_id}")
-    
-    org_id_int = int(org_id)
-    doc_uuid = document_id or str(uuid.uuid4())
-    
-    filename = "text_ingest.txt"
-    mime_type = "text/plain"
-    content = b""
-    
-    if file:
-        filename = file.filename
-        mime_type = file.content_type
-        content = await file.read()
-    elif text:
-        content = text.encode("utf-8")
-        
-    # Upload to storage
-    s3_key = f"knowledge_base/{org_id_int}/{doc_uuid}/{filename}"
-    # Wait, storage_fs.aget_presigned_put_url is for presigned, but we need direct upload.
-    # We can just write to local FS if in oss mode, or S3.
-    # Actually, the background task will fetch it from S3. So we must put it there.
-    # For now, we'll assume storage_fs has a method to write.
-    # A safer approach is to use the existing /knowledge-base/upload-url logic.
-    
-    return KBIngestResponse(
-        status_code=200,
-        status="success",
-        message="Document queued for ingestion",
-        document_id=doc_uuid,
-        org_id=org_id
-    )
-
-@router_kb.delete("/document")
-async def delete_kb_document(org_id: str = Form(...), document_id: str = Form(...)):
-    return {
-        "status_code": 200,
-        "status": "success",
-        "message": "Document deleted",
-        "deleted_chunks": 1,
-        "document_id": document_id,
-        "org_id": org_id
-    }

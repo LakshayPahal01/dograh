@@ -47,6 +47,7 @@ from api.tasks.knowledge_base_processing import process_knowledge_base_document
 from api.tasks.run_integrations import run_integrations_post_workflow_run
 from api.tasks.webhook_delivery import deliver_webhook, sweep_webhook_deliveries
 from api.tasks.workflow_completion import process_workflow_completion
+from api.services.mantra_webhook_notifier import mantra_webhook_notifier
 
 
 class WorkerSettings:
@@ -57,6 +58,7 @@ class WorkerSettings:
         process_campaign_batch,
         process_knowledge_base_document,
         deliver_webhook,
+        mantra_webhook_notifier,
     ]
     cron_jobs = [
         # Safety net for webhook deliveries whose ARQ job was lost (worker
