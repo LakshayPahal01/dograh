@@ -54,6 +54,8 @@ class WorkflowRunMode(Enum):
     WEBRTC = "webrtc"
     SMALLWEBRTC = "smallwebrtc"
     TEXTCHAT = "textchat"
+    VOICELINK = "voicelink"
+    ZADARMA = "zadarma"
 
     # Historical, not used anymore. Don't
     # use and don't remove
